@@ -1,7 +1,7 @@
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import Movie from "../Movie/Movie";
 
-function MovieList({ movies }) {
+function MovieList({ movies, numberOfMovies }) {
   return (
     <Grid2
       container
@@ -12,7 +12,7 @@ function MovieList({ movies }) {
         sm: { justifyContent: "center" },
       }}
     >
-      {movies.results.map((movie, i) => (
+      {movies.results.slice(0, numberOfMovies).map((movie, i) => (
         <Movie key={i} movie={movie} i={i} />
       ))}
     </Grid2>

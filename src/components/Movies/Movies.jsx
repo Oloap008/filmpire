@@ -1,9 +1,27 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import {
+  Box,
+  CircularProgress,
+  Pagination,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useGetMoviesQuery } from "../../services/TMDB";
 import MovieList from "../MovieList/MovieList";
+import { useState } from "react";
 
 function Movies() {
-  const { data, isFetching, error } = useGetMoviesQuery();
+  const [page, setPage] = useState(1);
+  const { genreIdOrCategoryName, searchQuery } = useSelector(
+    (state) => state.genreOrCategory
+  );
+  const { data, isFetching, error } = useGetMoviesQuery({
+    genreIdOrCategoryName,
+    searchQuery,
+    page,
+  });
+  const lg = useMediaQuery((theme) => theme.breakpoints.only("lg"));
+  const numberOfMovies = lg ? 16 : 18;
 
   if (isFetching)
     return (
@@ -27,7 +45,8 @@ function Movies() {
 
   return (
     <div>
-      <MovieList movies={data} />
+      <MovieList movies={data} numberOfMovies={numberOfMovies} />
+      {/* <Pagination /> */}
     </div>
   );
 }

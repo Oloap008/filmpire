@@ -12,6 +12,8 @@ import { styled, useTheme } from "@mui/system";
 import { Link } from "react-router-dom";
 import { useGetGenresQuery } from "../../services/TMDB";
 import genreIcons from "../../assets/genres";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
 
 const Image = styled("img")`
   width: 70%;
@@ -47,6 +49,10 @@ const redLogo =
 function Sidebar({ setMobileOpen }) {
   const theme = useTheme();
   const { data, isFetching } = useGetGenresQuery();
+  const dispatch = useDispatch();
+  const { genreIdOrCategoryName } = useSelector(
+    (state) => state.genreOrCategory
+  );
 
   return (
     <>
@@ -82,7 +88,9 @@ function Sidebar({ setMobileOpen }) {
               }}
               to="/"
             >
-              <ListItemButton onClick={() => {}}>
+              <ListItemButton
+                onClick={() => dispatch(selectGenreOrCategory(value))}
+              >
                 <ListItemIcon>
                   <GenreImage
                     src={genreIcons[label.toLowerCase()]}
@@ -112,7 +120,9 @@ function Sidebar({ setMobileOpen }) {
               }}
               to="/"
             >
-              <ListItemButton onClick={() => {}}>
+              <ListItemButton
+                onClick={() => dispatch(selectGenreOrCategory(id))}
+              >
                 <ListItemIcon>
                   <GenreImage
                     src={genreIcons[name.toLowerCase()]}
