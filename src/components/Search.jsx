@@ -3,7 +3,7 @@ import { styled } from "@mui/system";
 import { useState } from "react";
 import { Search as SeachIcon } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { searchMovie } from "../../features/currentGenreOrCategory";
+import { searchMovie } from "../features/currentGenreOrCategory";
 import { useLocation } from "react-router-dom";
 
 const StyledSearch = styled("div")`
@@ -25,7 +25,9 @@ function Search() {
 
   function handleKeyPress(e) {
     if (e.key === "Enter") {
+
       dispatch(searchMovie(query));
+      setQuery("");
     }
   }
 

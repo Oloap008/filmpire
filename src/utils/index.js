@@ -59,3 +59,8 @@ export async function createSessionId() {
     }
   }
 }
+
+export function logout() {
+  localStorage.clear();
+  window.location.href = "/";
+}

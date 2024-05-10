@@ -17,12 +17,13 @@ import {
 import { Box, styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Sidebar from "../Sidebar/Sidebar";
-import Search from "../Search/Search";
-import { createSessionId, fetchToken, fetchTokenOptions } from "../../utils";
+
+import { createSessionId, fetchToken, fetchTokenOptions } from "../utils";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, userSelector } from "../../features/auth";
-import { useColorMode } from "../../utils/ToggleColorMode";
+import { setUser, userSelector } from "../features/auth";
+import { useColorMode } from "../utils/ToggleColorMode";
+import Search from "./Search";
+import Sidebar from "./Sidebar";
 
 const drawerWidth = 240;
 
@@ -30,7 +31,6 @@ const Nav = styled("nav")`
   ${({ theme }) =>
     theme.unstable_sx({
       width: { sm: drawerWidth },
-      flexShrink: { md: 0 },
     })}
 `;
 
@@ -91,7 +91,7 @@ function NavBar() {
             height: "80px",
             display: "flex",
             justifyContent: "space-between",
-            marginLeft: { xs: 0, sm: "240px" },
+            ml: { sm: "240px" },
             flexWrap: { xs: "wrap" },
           }}
         >
@@ -99,7 +99,6 @@ function NavBar() {
             <IconButton
               color="inherit"
               edge="start"
-              style={{ outline: "none" }}
               onClick={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
               sx={{ mr: 2, display: { sm: "none" } }}
             >
@@ -121,20 +120,13 @@ function NavBar() {
               </Button>
             ) : (
               <Button
-                sx={{
-                  "&:hover": {
-                    color: "white !important",
-                    textDecoration: "none",
-                  },
-                }}
                 color="inherit"
                 component={Link}
                 to={`/profile/${user.id}`}
-                onClick={() => {}}
               >
                 {!isMobile && <>My Movies &nbsp;</>}
                 <Avatar
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqtWo5v7wo1P5HKSv1sNiEXIU3Jn9faO_7WxmL4i54Mg&s"
+                  src={`https://www.themoviedb.org/t/p/w64_and_h64_face${user?.avatar?.tmdb?.avatar_path}`}
                   alt="Profile"
                   sx={{ width: 30, height: 30 }}
                 />
@@ -150,21 +142,16 @@ function NavBar() {
           {isMobile ? (
             <Drawer
               variant="temporary"
-              anchor="right"
+              anchor="left"
               open={mobileOpen}
               onClose={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
-              sx={{ width: "240px" }}
+              sx={{ width: "230px" }}
               ModalProps={{ keepMounted: true }}
-              classes={{ paper: { sx: { width: drawerWidth } } }}
             >
               <Sidebar setMobileOpen={setMobileOpen} />
             </Drawer>
           ) : (
-            <Drawer
-              classes={{ paper: { sx: { width: drawerWidth } } }}
-              variant="permanent"
-              open
-            >
+            <Drawer variant="permanent">
               <Sidebar setMobileOpen={setMobileOpen} />
             </Drawer>
           )}

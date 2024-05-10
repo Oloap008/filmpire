@@ -1,3 +1,4 @@
+import { createEntityAdapter } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const tmdbReadAccessToken = import.meta.env
@@ -36,7 +37,7 @@ export const tmdbApi = createApi({
           genreIdOrCategoryName &&
           typeof genreIdOrCategoryName === "number"
         ) {
-          return `discover/movie?with_genres=${genreIdOrCategoryName}?page=${page}`;
+          return `discover/movie?with_genres=${genreIdOrCategoryName}&page=${page}`;
         }
 
         // GET Movies by Search
@@ -46,6 +47,21 @@ export const tmdbApi = createApi({
 
         // GET Popular Movies by default
         return `movie/popular?page=${page}`;
+      },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      // Always merge incoming data to the cache entry
+      merge: (currentCache, newItems) => {
+        if (newItems.page === 1) {
+          currentCache.results = newItems.results;
+        } else {
+          currentCache.results.push(...newItems.results);
+        }
+      },
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg;
       },
     }),
 
@@ -64,10 +80,12 @@ export const tmdbApi = createApi({
       query: (id) => `person/${id}`,
     }),
 
+    // Get Movies of a Actor
     getMoviesByActorId: builder.query({
       query: ({ id, page }) => `discover/movie?with_cast=${id}&page=${page}`,
     }),
 
+    // Get user favorites / watchlist
     getList: builder.query({
       query: ({ listName, accountId, sessionId, page }) =>
         `account/${accountId}/${listName}?session_id=${sessionId}&page=${page}`,

@@ -13,3 +13,25 @@
 * {
   text-decoration: none;
 }
+
+.movie-title {
+  text-overflow: ellipsis;
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.container_space-around {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+.buttons_container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

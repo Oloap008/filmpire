@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import Movie from "../Movie/Movie";
+import Movie from "./Movie";
 
 function RatedCards({ title, data }) {
   return (

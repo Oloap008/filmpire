@@ -9,11 +9,11 @@ import {
   ListSubheader,
 } from "@mui/material";
 import { styled, useTheme } from "@mui/system";
-import { Link } from "react-router-dom";
-import { useGetGenresQuery } from "../../services/TMDB";
-import genreIcons from "../../assets/genres";
-import { useDispatch, useSelector } from "react-redux";
-import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
+import { Link, useNavigate } from "react-router-dom";
+import { useGetGenresQuery } from "../services/TMDB";
+import genreIcons from "../assets/genres";
+import { useDispatch } from "react-redux";
+import { selectGenreOrCategory } from "../features/currentGenreOrCategory";
 
 const Image = styled("img")`
   width: 70%;
@@ -50,9 +50,6 @@ function Sidebar({ setMobileOpen }) {
   const theme = useTheme();
   const { data, isFetching } = useGetGenresQuery();
   const dispatch = useDispatch();
-  const { genreIdOrCategoryName } = useSelector(
-    (state) => state.genreOrCategory
-  );
 
   return (
     <>
@@ -89,7 +86,10 @@ function Sidebar({ setMobileOpen }) {
               to="/"
             >
               <ListItemButton
-                onClick={() => dispatch(selectGenreOrCategory(value))}
+                onClick={() => {
+                  setMobileOpen((prevMobileOpen) => !prevMobileOpen);
+                  dispatch(selectGenreOrCategory(value));
+                }}
               >
                 <ListItemIcon>
                   <GenreImage
@@ -103,7 +103,9 @@ function Sidebar({ setMobileOpen }) {
           ))
         )}
       </List>
+
       <Divider />
+
       <List>
         <ListSubheader>Genres</ListSubheader>
         {isFetching ? (
@@ -121,7 +123,10 @@ function Sidebar({ setMobileOpen }) {
               to="/"
             >
               <ListItemButton
-                onClick={() => dispatch(selectGenreOrCategory(id))}
+                onClick={() => {
+                  setMobileOpen((prevMobileOpen) => !prevMobileOpen);
+                  dispatch(selectGenreOrCategory(id));
+                }}
               >
                 <ListItemIcon>
                   <GenreImage

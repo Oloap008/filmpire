@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux";
-import { userSelector } from "../../features/auth";
+import { userSelector } from "../features/auth";
 import { Box } from "@mui/system";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { ExitToApp } from "@mui/icons-material";
-import { useGetListQuery } from "../../services/TMDB";
-import RatedCards from "../RatedCards/RatedCards";
+import { useGetListQuery } from "../services/TMDB";
+import RatedCards from "./RatedCards";
 import { useEffect } from "react";
+import { logout } from "../utils";
 
 function Profile() {
   const { user } = useSelector(userSelector);
@@ -45,11 +46,6 @@ function Profile() {
         <CircularProgress size="8rem" />
       </Box>
     );
-  }
-
-  function logout() {
-    localStorage.clear();
-    window.location.href = "/";
   }
 
   return (

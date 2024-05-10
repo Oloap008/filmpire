@@ -1,14 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useGetActorQuery,
-  useGetMoviesByActorIdQuery,
-} from "../../services/TMDB";
+import { useGetActorQuery, useGetMoviesByActorIdQuery } from "../services/TMDB";
 import { Box, styled } from "@mui/system";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { useTheme } from "@emotion/react";
 import { ArrowBack } from "@mui/icons-material";
-import MovieList from "../MovieList/MovieList";
+import MovieList from "./MovieList";
+import Loader from "./Loader";
 
 const Poster = styled("img")`
   border-radius: 20px;
@@ -30,13 +28,7 @@ function Actors() {
       page,
     });
 
-  if (isFetching || isFetchingActorMovies) {
-    return (
-      <Box display="flex" justifyContent="center" alignContent="center">
-        <CircularProgress size="8rem" />
-      </Box>
-    );
-  }
+  if (isFetching || isFetchingActorMovies) return <Loader />;
 
   if (error) {
     return (
@@ -103,7 +95,7 @@ function Actors() {
           Movies
         </Typography>
         {actorMovies ? (
-          <MovieList movies={actorMovies} numberOfMovies={12} />
+          <MovieList movies={actorMovies} numberOfMovies={10} />
         ) : (
           <Box>Sorry nothing was found.</Box>
         )}

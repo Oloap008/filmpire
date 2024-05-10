@@ -4,23 +4,22 @@ import {
   useGetListQuery,
   useGetMovieQuery,
   useGetRecommendationsQuery,
-} from "../../services/TMDB";
+} from "../services/TMDB";
 import {
   Box,
   Button,
   ButtonGroup,
-  CircularProgress,
   Modal,
   Rating,
   Typography,
   useTheme,
 } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Unstable_Grid2";
 import { styled } from "@mui/system";
 
-import genreIcons from "../../assets/genres";
+import genreIcons from "../assets/genres";
 import { useDispatch, useSelector } from "react-redux";
-import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
+import { selectGenreOrCategory } from "../features/currentGenreOrCategory";
 import {
   ArrowBack,
   Favorite,
@@ -31,9 +30,10 @@ import {
   Remove,
   Theaters,
 } from "@mui/icons-material";
-import MovieList from "../MovieList/MovieList";
+import MovieList from "./MovieList";
 import { useEffect, useState } from "react";
-import { userSelector } from "../../features/auth";
+import { userSelector } from "../features/auth";
+import Loader from "./Loader";
 
 const Poster = styled("img")`
   border-radius: 20px;
@@ -190,13 +190,7 @@ function MovieInformation() {
     setIsMovieWatchlisted((state) => !state);
   }
 
-  if (isFetching || isRecommendationsFetching) {
-    return (
-      <Box display="flex" justifyContent="center" alignContent="center">
-        <CircularProgress size="8rem" />
-      </Box>
-    );
-  }
+  if (isFetching || isRecommendationsFetching) return <Loader />;
 
   if (error) {
     return (
@@ -209,19 +203,8 @@ function MovieInformation() {
   }
 
   return (
-    <Grid2
-      container
-      sx={{
-        display: "flex",
-        justifyContent: "space-around",
-        margin: "10px 0 !important",
-        [theme.breakpoints.down("xs")]: {
-          flexDirection: "column",
-          flexWrap: "wrap",
-        },
-      }}
-    >
-      <Grid2
+    <Grid container className="container_space-around">
+      <Grid
         sm={12}
         lg={4}
         sx={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}
@@ -230,24 +213,17 @@ function MovieInformation() {
           src={`https://image.tmdb.org/t/p/w500/${data?.poster_path}`}
           alt={data?.title}
         />
-      </Grid2>
-      <Grid2 container direction="column" lg={7}>
+      </Grid>
+      <Grid container direction="column" lg={7}>
         <Typography variant="h3" align="center" gutterBottom>
           {data?.title} ({data.release_date.split("-")[0]})
         </Typography>
         <Typography variant="h5" align="center" gutterBottom>
           {data?.tagline}
         </Typography>
-        <Grid2
-          sx={{
-            display: "flex",
-            justifyContent: "space-around",
-            margin: "10px 0 !important",
-            [theme.breakpoints.down("sm")]: {
-              flexDirection: "column",
-              flexWrap: "wrap",
-            },
-          }}
+        <Grid
+          className="container_space-around"
+          sx={{ flexDirection: { md: "row", xs: "column" } }}
         >
           <Box display="flex" align="center" justifyContent="center">
             <Rating readOnly value={data.vote_average / 2} />
@@ -266,15 +242,8 @@ function MovieInformation() {
             {data?.runtime}min | Language:{" "}
             {data?.spoken_languages[0].english_name}
           </Typography>
-        </Grid2>
-        <Grid2
-          sx={{
-            margin: "10px 0 !important",
-            display: "flex",
-            justifyContent: "space-around",
-            flexWrap: "wrap",
-          }}
-        >
+        </Grid>
+        <Grid className="container_space-around" sx={{ flexWrap: "wrap" }}>
           {data?.genres?.map((genre) => (
             <StyledLink
               key={genre.name}
@@ -290,7 +259,7 @@ function MovieInformation() {
               </Typography>
             </StyledLink>
           ))}
-        </Grid2>
+        </Grid>
         <Typography variant="h5" gutterBottom sx={{ marginTop: "10px" }}>
           Overview
         </Typography>
@@ -298,13 +267,13 @@ function MovieInformation() {
         <Typography variant="h5" gutterBottom>
           Top Cast
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {data &&
             data.credits?.cast
               ?.map(
                 (character) =>
                   character.profile_path && (
-                    <Grid2
+                    <Grid
                       key={character.name}
                       xs={4}
                       md={2}
@@ -322,31 +291,23 @@ function MovieInformation() {
                       <Typography color="textSecondary">
                         {character.character.split("/").at(0)}
                       </Typography>
-                    </Grid2>
+                    </Grid>
                   )
               )
               .slice(0, 6)}
-        </Grid2>
-        <Grid2 container sx={{ marginTop: "2rem" }}>
+        </Grid>
+        <Grid container sx={{ marginTop: "2rem" }}>
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
               width: "100%",
+              gap: "5px",
               flexDirection: { xs: "column", md: "row" },
             }}
           >
-            <Grid2
-              xs={12}
-              sm={6}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-                flexDirection: { xs: "column", md: "row" },
-              }}
-            >
-              <ButtonGroup size="medium" variant="outlined">
+            <Grid xs={12} sm={6}>
+              <ButtonGroup size="medium" variant="outlined" fullWidth>
                 <Button
                   target="_blank"
                   href={data?.homepage}
@@ -369,19 +330,10 @@ function MovieInformation() {
                   Trailer
                 </Button>
               </ButtonGroup>
-            </Grid2>
+            </Grid>
 
-            <Grid2
-              xs={12}
-              sm={6}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-                flexDirection: { xs: "column", md: "row" },
-              }}
-            >
-              <ButtonGroup size="medium" variant="outlined">
+            <Grid xs={12} sm={6}>
+              <ButtonGroup size="medium" variant="outlined" fullWidth>
                 <Button
                   onClick={addToFavorites}
                   endIcon={
@@ -414,16 +366,16 @@ function MovieInformation() {
                   </Typography>
                 </Button>
               </ButtonGroup>
-            </Grid2>
+            </Grid>
           </Box>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
       <Box marginTop="5rem" width="100%">
         <Typography variant="h3" gutterBottom align="center">
           You might also like
         </Typography>
         {recommendations ? (
-          <MovieList movies={recommendations} numberOfMovies={12} />
+          <MovieList movies={recommendations} numberOfMovies={15} />
         ) : (
           <Box>Sorry nothing was found.</Box>
         )}
@@ -445,7 +397,7 @@ function MovieInformation() {
           />
         )}
       </Modal>
-    </Grid2>
+    </Grid>
   );
 }
 

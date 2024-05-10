@@ -1,5 +1,5 @@
 import { Grow, Rating, Tooltip, Typography } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Unstable_Grid2";
 import { styled, useTheme } from "@mui/system";
 import { Link } from "react-router-dom";
 
@@ -28,22 +28,21 @@ const MovieImg = styled("img")`
   &:hover {
     transform: scale(1.05);
   }
+
+  ${({ theme }) =>
+    theme.unstable_sx({
+      [theme.breakpoints.up("lg")]: {
+        height: "340px",
+      },
+    })};
 `;
 
 function Movie({ movie, i }) {
   const theme = useTheme();
 
   return (
-    <Grid2
-      item="true"
-      xs={12}
-      sm={6}
-      md={4}
-      lg={3}
-      xl={2}
-      sx={{ padding: "10px" }}
-    >
-      <Grow in key={i} timeout={(i + 1) * 250}>
+    <Grid xs={12} sm={6} md={4} lg={3} xl={2.4} sx={{ padding: "10px" }}>
+      <Grow in key={i} timeout={750}>
         <StyledLink to={`/movie/${movie.id}`}>
           <MovieImg
             alt={movie.title}
@@ -54,16 +53,8 @@ function Movie({ movie, i }) {
             }
           />
           <Typography
-            sx={{
-              color: theme.palette.text.primary,
-              textOverflow: "ellipsis",
-              width: "230px",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              marginTop: "10px",
-              marginBottom: 0,
-              textAlign: "center",
-            }}
+            sx={{ color: theme.palette.text.primary }}
+            className="movie-title"
             variant="h5"
           >
             {movie.title}
@@ -78,7 +69,7 @@ function Movie({ movie, i }) {
           </Tooltip>
         </StyledLink>
       </Grow>
-    </Grid2>
+    </Grid>
   );
 }
 
