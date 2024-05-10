@@ -40,7 +40,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense>
       <RouterProvider router={router} />;
     </Suspense>
   );
