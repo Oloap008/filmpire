@@ -1,4 +1,3 @@
-import { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import Layout from "./components/Layout";
